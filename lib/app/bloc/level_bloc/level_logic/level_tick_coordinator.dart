@@ -44,35 +44,6 @@ class _LevelTickCoordinator {
     final usedHouseCoords = <Offset>{};
     final mathRandom = math.Random();
 
-    // Helper: do two line segments intersect?
-    bool _linesIntersect(Offset a1, Offset a2, Offset b1, Offset b2) {
-      double ccw(Offset A, Offset B, Offset C) {
-        return (C.dy - A.dy) * (B.dx - A.dx) - (B.dy - A.dy) * (C.dx - A.dx);
-      }
-
-      return (ccw(a1, b1, b2) * ccw(a2, b1, b2) < 0) &&
-          (ccw(b1, a1, a2) * ccw(b2, a1, a2) < 0);
-    }
-
-    // Helper for swept collision: line segment (with radius) vs rect
-    bool _lineIntersectsRect(Offset p1, Offset p2, Rect rect, double radius) {
-      // Expand rect by radius
-      final expanded = rect.inflate(radius);
-      // If either endpoint is inside, it's a hit
-      if (expanded.contains(p1) || expanded.contains(p2)) return true;
-      // Check intersection with each edge
-      final edges = [
-        [expanded.topLeft, expanded.topRight],
-        [expanded.topRight, expanded.bottomRight],
-        [expanded.bottomRight, expanded.bottomLeft],
-        [expanded.bottomLeft, expanded.topLeft],
-      ];
-      for (final edge in edges) {
-        if (_linesIntersect(p1, p2, edge[0], edge[1])) return true;
-      }
-      return false;
-    }
-
     var dynamicClouds = List<DynamicCloud>.from(state.dynamicClouds);
     dynamicClouds = LevelCloudsLogic.removeOffscreenClouds(
       dynamicClouds,
@@ -157,15 +128,10 @@ class _LevelTickCoordinator {
     final Set<int> hitEnemyIndices = <int>{};
     final Set<int> hitAmmoIndices = <int>{};
 
-    // First pass: detect all collisions and mark indices (swept collision with true previous position)
     for (int i = 0; i < dynamicAmmunition.length; i++) {
       final ammo = dynamicAmmunition[i];
-      final prevCenter = ammo.previousCenter ?? ammo.center;
       final nextCenter = ammo.center.translate(0, -ammo.speed * dt);
-      dynamicAmmunition[i] = ammo.copyWith(
-        center: nextCenter,
-        previousCenter: ammo.center,
-      );
+      dynamicAmmunition[i] = ammo.copyWith(center: nextCenter);
 
       if (nextCenter.dy < -ammoRadius) {
         hitAmmoIndices.add(i);
@@ -173,30 +139,25 @@ class _LevelTickCoordinator {
       }
 
       for (int j = 0; j < dynamicEnemies.length; j++) {
-        if (hitEnemyIndices.contains(j))
-          continue; // Don't double-hit same enemy in one tick
         final enemy = dynamicEnemies[j];
         final enemyRect = Rect.fromCenter(
           center: enemy.center,
           width: enemySize,
           height: enemySize,
         );
-        // Check swept collision: if the line from prevCenter to nextCenter intersects enemyRect
-        if (_lineIntersectsRect(
-          prevCenter,
-          nextCenter,
-          enemyRect,
-          ammoRadius,
-        )) {
+        final ammoRect = Rect.fromCircle(
+          center: nextCenter,
+          radius: ammoRadius,
+        );
+        if (enemyRect.overlaps(ammoRect)) {
           hitEnemyIndices.add(j);
           hitAmmoIndices.add(i);
           points += 1;
-          break; // One ammo can only hit one enemy per tick
+          break;
         }
       }
     }
 
-    // Second pass: remove by index after all collisions are detected
     dynamicEnemies = [
       for (int i = 0; i < dynamicEnemies.length; i++)
         if (!hitEnemyIndices.contains(i)) dynamicEnemies[i],
