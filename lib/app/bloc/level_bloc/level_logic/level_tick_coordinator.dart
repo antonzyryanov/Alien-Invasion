@@ -125,20 +125,18 @@ class _LevelTickCoordinator {
     );
     final enemySize = AppDimensions.enemySizeForSize(viewport);
     final ammoRadius = 16.0;
-    final Set<int> hitEnemyIndices = <int>{};
     final Set<int> hitAmmoIndices = <int>{};
+    final Set<int> hitEnemyIndices = <int>{};
 
+    // Move ammo and check collisions
     for (int i = 0; i < dynamicAmmunition.length; i++) {
+      if (hitAmmoIndices.contains(i)) continue; // Skip if ammo already hit
       final ammo = dynamicAmmunition[i];
-      final nextCenter = ammo.center.translate(0, -ammo.speed * dt);
-      dynamicAmmunition[i] = ammo.copyWith(center: nextCenter);
 
-      if (nextCenter.dy < -ammoRadius) {
-        hitAmmoIndices.add(i);
-        continue;
-      }
-
+      // Check collision at current position
+      bool hit = false;
       for (int j = 0; j < dynamicEnemies.length; j++) {
+        if (hitEnemyIndices.contains(j)) continue; // Skip if enemy already hit
         final enemy = dynamicEnemies[j];
         final enemyRect = Rect.fromCenter(
           center: enemy.center,
@@ -146,26 +144,40 @@ class _LevelTickCoordinator {
           height: enemySize,
         );
         final ammoRect = Rect.fromCircle(
-          center: nextCenter,
+          center: ammo.center,
           radius: ammoRadius,
         );
         if (enemyRect.overlaps(ammoRect)) {
           hitEnemyIndices.add(j);
           hitAmmoIndices.add(i);
           points += 1;
-          break;
+          hit = true;
+          break; // Only allow this ammo to destroy one enemy
         }
+      }
+      if (hit) continue;
+
+      // Move ammo only if not hit
+      final nextCenter = ammo.center.translate(0, -ammo.speed * dt);
+      dynamicAmmunition[i] = ammo.copyWith(center: nextCenter);
+      if (nextCenter.dy < -ammoRadius) {
+        hitAmmoIndices.add(i);
+        continue;
       }
     }
 
-    dynamicEnemies = [
-      for (int i = 0; i < dynamicEnemies.length; i++)
-        if (!hitEnemyIndices.contains(i)) dynamicEnemies[i],
-    ];
-    dynamicAmmunition = [
-      for (int i = 0; i < dynamicAmmunition.length; i++)
-        if (!hitAmmoIndices.contains(i)) dynamicAmmunition[i],
-    ];
+    // Remove by descending index to avoid index shift bugs
+    final sortedEnemyIndices = hitEnemyIndices.toList()
+      ..sort((a, b) => b.compareTo(a));
+    for (final idx in sortedEnemyIndices) {
+      if (idx >= 0 && idx < dynamicEnemies.length) dynamicEnemies.removeAt(idx);
+    }
+    final sortedAmmoIndices = hitAmmoIndices.toList()
+      ..sort((a, b) => b.compareTo(a));
+    for (final idx in sortedAmmoIndices) {
+      if (idx >= 0 && idx < dynamicAmmunition.length)
+        dynamicAmmunition.removeAt(idx);
+    }
 
     Offset shipCenter = state.shipCenter;
     Offset shipVelocity = state.shipVelocity;

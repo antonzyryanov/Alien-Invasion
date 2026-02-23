@@ -32,6 +32,7 @@ part 'level_logic/level_houses_logic.dart';
 part 'level_logic/level_tick_coordinator.dart';
 
 class LevelBloc extends Bloc<LevelEvent, LevelState> {
+  DateTime? _lastAmmoSoundTime;
   void _onAmmunitionFired(
     LevelAmmunitionFired event,
     Emitter<LevelState> emit,
@@ -51,7 +52,12 @@ class LevelBloc extends Bloc<LevelEvent, LevelState> {
     emit(
       state.copyWith(dynamicAmmunition: [...state.dynamicAmmunition, newAmmo]),
     );
-    unawaited(_audioService.playAmmunitionSound());
+    final now = DateTime.now();
+    if (_lastAmmoSoundTime == null ||
+        now.difference(_lastAmmoSoundTime!) > Duration(milliseconds: 100)) {
+      unawaited(_audioService.playAmmunitionSound());
+      _lastAmmoSoundTime = now;
+    }
   }
 
   LevelBloc({required AudioService audioService, bool enableTicker = true})
@@ -105,26 +111,24 @@ class LevelBloc extends Bloc<LevelEvent, LevelState> {
 
     final difficultyLevel = event.levelType.levelDifficulty;
     final maxEnemies = 12 - difficultyLevel;
-    final viewportWidth = viewport.width;
+    final screenWidth = MediaQueryData.fromWindow(
+      WidgetsBinding.instance.window,
+    ).size.width;
     final enemySize = AppDimensions.enemySizeForSize(viewport);
     final minX = enemySize / 2;
-    final maxX = viewportWidth - enemySize / 2;
+    final maxX = screenWidth - enemySize / 2;
     final mathRandom = math.Random();
-    final Set<Offset> usedCoords = {};
     final List<DynamicEnemy> initialEnemies = [];
+    final double spacing =
+        (maxX - minX) / (maxEnemies > 1 ? maxEnemies - 1 : 1);
+    List<double> xPositions = [
+      for (int i = 0; i < maxEnemies; i++) minX + i * spacing,
+    ];
+    xPositions.shuffle(mathRandom);
     for (int i = 0; i < maxEnemies; i++) {
-      Offset spawnCoord;
-      int attempts = 0;
-      do {
-        final x = minX + mathRandom.nextDouble() * (maxX - minX);
-        final y = -(300 + mathRandom.nextDouble() * 900);
-        spawnCoord = Offset(x, y);
-        print(
-          '[ENEMY INIT DEBUG] viewportWidth: $viewportWidth, enemySize: $enemySize, minX: $minX, maxX: $maxX, spawnCoord: $spawnCoord',
-        );
-        attempts++;
-      } while (usedCoords.contains(spawnCoord) && attempts < 20);
-      usedCoords.add(spawnCoord);
+      final x = xPositions[i];
+      final y = -(300 + mathRandom.nextDouble() * 900);
+      final spawnCoord = Offset(x, y);
       initialEnemies.add(
         DynamicEnemy(
           center: spawnCoord,
