@@ -6,10 +6,10 @@ Mobile arcade game for android/ios
 
 <table>
 	<tr>
-		<td><img src="assets/images/ships/ship_1.jpg" alt="Screenshot 1"></td>
-		<td><img src="assets/images/ships/ship_2.jpg" alt="Screenshot 2"></td>
-		<td><img src="assets/images/ships/ship_3.jpg" alt="Screenshot 3"></td>
-		<td><img src="assets/images/ships/ship_4.jpg" alt="Screenshot 4"></td>
+		<td><img src="assets/images/ships/ship_1.png" alt="Screenshot 1"></td>
+		<td><img src="assets/images/ships/ship_2.png" alt="Screenshot 2"></td>
+		<td><img src="assets/images/ships/ship_3.png" alt="Screenshot 3"></td>
+		<td><img src="assets/images/ships/ship_4.png" alt="Screenshot 4"></td>
 	</tr>
 </table>
 
