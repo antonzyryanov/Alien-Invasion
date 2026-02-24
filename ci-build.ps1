@@ -24,48 +24,48 @@ function Assert-CommandExists {
   }
 }
 
-Invoke-Step -Name 'Проверка окружения' -Action {
+Invoke-Step -Name 'Environment check' -Action {
   Assert-CommandExists -CommandName 'git'
   Assert-CommandExists -CommandName 'flutter'
   if (-not (Test-Path '.git')) {
-    throw 'Текущая директория не является git-репозиторием.'
+    throw "Current directory is not a git repository."
   }
 }
 
-Invoke-Step -Name 'Запуск тестов (flutter test)' -Action {
+Invoke-Step -Name 'Run tests (flutter test)' -Action {
   flutter test
   if ($LASTEXITCODE -ne 0) {
-    throw 'Тесты не прошли. Commit и push отменены.'
+    throw "Tests failed. Commit and push cancelled."
   }
 }
 
-Invoke-Step -Name 'Проверка сборки проекта (flutter build apk --debug)' -Action {
+Invoke-Step -Name 'Build project check (flutter build apk --debug)' -Action {
   flutter build apk --debug
   if ($LASTEXITCODE -ne 0) {
-    throw 'Сборка не удалась. Commit и push отменены.'
+    throw "Build failed. Commit and push cancelled."
   }
 }
 
-Invoke-Step -Name 'Проверка наличия изменений' -Action {
+Invoke-Step -Name 'Check for changes' -Action {
   $status = git status --porcelain
   if ([string]::IsNullOrWhiteSpace(($status -join "`n"))) {
-    throw 'Нет изменений для commit. Остановлено.'
+    throw "No changes to commit. Stopped."
   }
 }
 
-Invoke-Step -Name 'Commit изменений' -Action {
+Invoke-Step -Name 'Commit changes' -Action {
   git add -A
   git commit -m "$CommitMessage"
   if ($LASTEXITCODE -ne 0) {
-    throw 'Commit не выполнен.'
+    throw "Commit failed."
   }
 }
 
-Invoke-Step -Name 'Push в удаленный репозиторий' -Action {
+Invoke-Step -Name 'Push to remote repository' -Action {
   git push
   if ($LASTEXITCODE -ne 0) {
-    throw 'Push не выполнен.'
+    throw "Push failed."
   }
 }
 
-Write-Host "`nCI с проверкой сборки завершён успешно: тесты и сборка пройдены, изменения отправлены." -ForegroundColor Green
+Write-Host "`nCI with build check completed successfully: tests and build passed, changes pushed." -ForegroundColor Green
