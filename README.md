@@ -27,7 +27,7 @@ Mobile arcade game for android/ios
 
 ## Manual Tests videos
 
-
+https://drive.google.com/drive/folders/1Q8Ub6-oLGrW_4znSa5WRcEZWZ64ojMiX?usp=sharing
 
 ## App Functionality
 
