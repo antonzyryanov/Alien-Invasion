@@ -6,10 +6,22 @@ Mobile arcade game for android/ios
 
 <table>
 	<tr>
-		<td><img src="assets/images/ships/ship_1.png" alt="Screenshot 1"></td>
-		<td><img src="assets/images/ships/ship_2.png" alt="Screenshot 2"></td>
-		<td><img src="assets/images/ships/ship_3.png" alt="Screenshot 3"></td>
-		<td><img src="assets/images/ships/ship_4.png" alt="Screenshot 4"></td>
+		<td><img src="screenshots/screenshot_1.png" alt="Screenshot 1"></td>
+		<td><img src="screenshots/screenshot_2.png" alt="Screenshot 2"></td>
+		<td><img src="screenshots/screenshot_3.png" alt="Screenshot 3"></td>
+		<td><img src="screenshots/screenshot_4.png" alt="Screenshot 4"></td>
+	</tr>
+	<tr>
+		<td><img src="screenshots/screenshot_5.png" alt="Screenshot 5"></td>
+		<td><img src="screenshots/screenshot_6.png" alt="Screenshot 6"></td>
+		<td><img src="screenshots/screenshot_7.png" alt="Screenshot 7"></td>
+		<td><img src="screenshots/screenshot_8.png" alt="Screenshot 8"></td>
+	</tr>
+	<tr>
+		<td><img src="screenshots/screenshot_9.png" alt="Screenshot 9"></td>
+		<td><img src="screenshots/screenshot_10.png" alt="Screenshot 10"></td>
+		<td><img src="screenshots/screenshot_11.png" alt="Screenshot 11"></td>
+		<td><img src="screenshots/screenshot_12.png" alt="Screenshot 12"></td>
 	</tr>
 </table>
 
