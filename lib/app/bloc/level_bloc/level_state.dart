@@ -15,6 +15,7 @@ class LevelState extends Equatable {
     required this.dynamicClouds,
     required this.dynamicTrees,
     required this.dynamicHouses,
+    required this.dynamicGifts,
     required this.lives,
     required this.timeLeft,
     required this.totalDuration,
@@ -25,6 +26,8 @@ class LevelState extends Equatable {
     required this.cloudTimers,
     required this.treeTimers,
     required this.houseTimers,
+    required this.giftTimers,
+    required this.giftBonusFeedbacks,
     required this.enemyTimers,
     required this.enemySpawnTimer,
   });
@@ -43,6 +46,7 @@ class LevelState extends Equatable {
     dynamicClouds: const [],
     dynamicTrees: const [],
     dynamicHouses: const [],
+    dynamicGifts: const [],
     dynamicAmmunition: const [],
     lives: 3,
     timeLeft: Duration.zero,
@@ -53,6 +57,8 @@ class LevelState extends Equatable {
     cloudTimers: const {},
     treeTimers: const {},
     houseTimers: const {},
+    giftTimers: const {},
+    giftBonusFeedbacks: const [],
     enemyTimers: const {},
     enemySpawnTimer: 0.0,
   );
@@ -71,6 +77,7 @@ class LevelState extends Equatable {
   final List<DynamicCloud> dynamicClouds;
   final List<DynamicTree> dynamicTrees;
   final List<DynamicHouse> dynamicHouses;
+  final List<DynamicGift> dynamicGifts;
   final List<DynamicAmmunition> dynamicAmmunition;
   final int lives;
   final Duration timeLeft;
@@ -81,6 +88,8 @@ class LevelState extends Equatable {
   final Map<String, double> cloudTimers;
   final Map<String, double> treeTimers;
   final Map<String, double> houseTimers;
+  final Map<String, double> giftTimers;
+  final List<FloatingBonusFeedback> giftBonusFeedbacks;
   final Map<String, double> enemyTimers;
 
   bool get isPlayable => status == LevelStatus.playing;
@@ -99,6 +108,7 @@ class LevelState extends Equatable {
     List<DynamicCloud>? dynamicClouds,
     List<DynamicTree>? dynamicTrees,
     List<DynamicHouse>? dynamicHouses,
+    List<DynamicGift>? dynamicGifts,
     List<DynamicAmmunition>? dynamicAmmunition,
     int? lives,
     Duration? timeLeft,
@@ -109,6 +119,8 @@ class LevelState extends Equatable {
     Map<String, double>? cloudTimers,
     Map<String, double>? treeTimers,
     Map<String, double>? houseTimers,
+    Map<String, double>? giftTimers,
+    List<FloatingBonusFeedback>? giftBonusFeedbacks,
     Map<String, double>? enemyTimers,
     double? enemySpawnTimer,
   }) {
@@ -126,6 +138,7 @@ class LevelState extends Equatable {
       dynamicClouds: dynamicClouds ?? this.dynamicClouds,
       dynamicTrees: dynamicTrees ?? this.dynamicTrees,
       dynamicHouses: dynamicHouses ?? this.dynamicHouses,
+      dynamicGifts: dynamicGifts ?? this.dynamicGifts,
       dynamicAmmunition: dynamicAmmunition ?? this.dynamicAmmunition,
       lives: lives ?? this.lives,
       timeLeft: timeLeft ?? this.timeLeft,
@@ -136,6 +149,8 @@ class LevelState extends Equatable {
       cloudTimers: Map<String, double>.from(cloudTimers ?? this.cloudTimers),
       treeTimers: Map<String, double>.from(treeTimers ?? this.treeTimers),
       houseTimers: Map<String, double>.from(houseTimers ?? this.houseTimers),
+      giftTimers: Map<String, double>.from(giftTimers ?? this.giftTimers),
+      giftBonusFeedbacks: giftBonusFeedbacks ?? this.giftBonusFeedbacks,
       enemyTimers: Map<String, double>.from(enemyTimers ?? this.enemyTimers),
       enemySpawnTimer: enemySpawnTimer ?? this.enemySpawnTimer,
     );
@@ -156,6 +171,7 @@ class LevelState extends Equatable {
     dynamicClouds,
     dynamicTrees,
     dynamicHouses,
+    dynamicGifts,
     dynamicAmmunition,
     lives,
     timeLeft,
@@ -166,6 +182,8 @@ class LevelState extends Equatable {
     cloudTimers,
     treeTimers,
     houseTimers,
+    giftTimers,
+    giftBonusFeedbacks,
     enemyTimers,
   ];
 }

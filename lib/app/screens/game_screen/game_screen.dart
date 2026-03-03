@@ -16,7 +16,9 @@ import 'widgets/level_finished_overlay.dart';
 import 'widgets/game_city_layer.dart';
 import 'widgets/game_trees_layer.dart';
 import 'widgets/game_clouds_layer.dart';
+import 'widgets/game_gifts_layer.dart';
 import 'widgets/game_ammunition_layer.dart';
+import 'widgets/game_gift_bonus_feedback_layer.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({
@@ -98,13 +100,13 @@ class GameScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      GameCityLayer(
-                        houses: state.dynamicHouses,
+                      GameTreesLayer(
+                        trees: state.dynamicTrees,
                         viewport: layoutSize,
                         screenWidth: MediaQuery.of(context).size.width,
                       ),
-                      GameTreesLayer(
-                        trees: state.dynamicTrees,
+                      GameCityLayer(
+                        houses: state.dynamicHouses,
                         viewport: layoutSize,
                         screenWidth: MediaQuery.of(context).size.width,
                       ),
@@ -113,6 +115,7 @@ class GameScreen extends StatelessWidget {
                         viewport: layoutSize,
                         screenWidth: MediaQuery.of(context).size.width,
                       ),
+                      GameGiftsLayer(gifts: state.dynamicGifts),
                       GameEnemiesLayer(
                         enemyTexture: level.enemyTexture,
                         borderThickness: borderThickness,
@@ -128,6 +131,9 @@ class GameScreen extends StatelessWidget {
                         shipCenter: state.shipCenter,
                         shipSize: shipSize,
                         shipAsset: level.shipAsset,
+                      ),
+                      GameGiftBonusFeedbackLayer(
+                        feedbacks: state.giftBonusFeedbacks,
                       ),
                       GameHudLayer(
                         hudTopInset: hudTopInset,

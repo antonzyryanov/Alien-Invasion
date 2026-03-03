@@ -12,7 +12,7 @@ class _LevelShipLogic {
     required List<Rect> enemyRects,
   }) {
     final double shipY = viewport.height - 80;
-    final Offset velocity = Offset(tiltX * 30, 0) * dt;
+    final Offset velocity = Offset(tiltX * 90, 0) * dt;
     double nextDx = state.shipCenter.dx + velocity.dx;
 
     if (state.shipCenter == Offset.zero) {

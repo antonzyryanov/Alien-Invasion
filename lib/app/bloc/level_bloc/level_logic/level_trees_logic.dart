@@ -36,21 +36,17 @@ class LevelTreesLogic {
     if (treeTimers[timerKey]! >= spawnInterval) {
       treeTimers[timerKey] = 0;
       final treeAsset = state.levelType!.treeAsset;
-      // Unique x/y coordinates, prevent overlap with trees and houses
       const renderTreeWidth = 120.0;
-      const renderTreeHeight = 72.0;
+      const renderTreeHeight = 144.0;
       Offset spawnCoord;
       int attempts = 0;
       bool overlaps = false;
       do {
-        final screenWidth = MediaQueryData.fromWindow(
-          WidgetsBinding.instance.window,
-        ).size.width;
-        final x = mathRandom.nextDouble() * (screenWidth - renderTreeWidth);
-        final y = -100.0;
+        final x =
+            mathRandom.nextDouble() * (state.viewport.width - renderTreeWidth);
+        final y = -(300 + mathRandom.nextDouble() * 900);
         spawnCoord = Offset(x, y);
         overlaps = false;
-        // Check overlap with all existing trees
         for (final tree in trees) {
           final rectA = Rect.fromLTWH(x, y, renderTreeWidth, renderTreeHeight);
           final rectB = Rect.fromLTWH(
@@ -64,7 +60,6 @@ class LevelTreesLogic {
             break;
           }
         }
-        // Check overlap with all existing houses
         for (final house in state.dynamicHouses) {
           final rectA = Rect.fromLTWH(x, y, renderTreeWidth, renderTreeHeight);
           final rectB = Rect.fromLTWH(

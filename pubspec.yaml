@@ -76,6 +76,7 @@ flutter:
     - assets/images/fields/
     - assets/images/enemies/
     - assets/images/ammunition/
+    - assets/images/gifts/
     - assets/images/onboarding/
     - assets/images/game_over/
     - assets/images/app_icon/

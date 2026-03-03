@@ -5,6 +5,7 @@ enum LevelType {
     fieldAsset: 'assets/images/fields/field_1.png',
     enemyTexture: 'assets/images/enemies/enemy_1.png',
     ammunitionAsset: 'assets/images/ammunition/ammunition_1.png',
+    giftAsset: 'assets/images/gifts/gift_1.png',
     treeAsset: 'assets/images/trees/tree_1.png',
     city: 1,
     levelDifficulty: 1,
@@ -15,6 +16,7 @@ enum LevelType {
     fieldAsset: 'assets/images/fields/field_2.png',
     enemyTexture: 'assets/images/enemies/enemy_2.png',
     ammunitionAsset: 'assets/images/ammunition/ammunition_2.png',
+    giftAsset: 'assets/images/gifts/gift_2.png',
     treeAsset: 'assets/images/trees/tree_2.png',
     city: 1,
     levelDifficulty: 2,
@@ -25,6 +27,7 @@ enum LevelType {
     fieldAsset: 'assets/images/fields/field_3.png',
     enemyTexture: 'assets/images/enemies/enemy_3.png',
     ammunitionAsset: 'assets/images/ammunition/ammunition_3.png',
+    giftAsset: 'assets/images/gifts/gift_3.png',
     treeAsset: 'assets/images/trees/tree_3.png',
     city: 2,
     levelDifficulty: 3,
@@ -35,6 +38,7 @@ enum LevelType {
     fieldAsset: 'assets/images/fields/field_4.png',
     enemyTexture: 'assets/images/enemies/enemy_4.png',
     ammunitionAsset: 'assets/images/ammunition/ammunition_4.png',
+    giftAsset: 'assets/images/gifts/gift_4.png',
     treeAsset: 'assets/images/trees/tree_4.png',
     city: 2,
     levelDifficulty: 4,
@@ -45,6 +49,7 @@ enum LevelType {
     fieldAsset: 'assets/images/fields/field_5.png',
     enemyTexture: 'assets/images/enemies/enemy_5.png',
     ammunitionAsset: 'assets/images/ammunition/ammunition_5.png',
+    giftAsset: 'assets/images/gifts/gift_5.png',
     treeAsset: 'assets/images/trees/tree_2.png',
     city: 1,
     levelDifficulty: 5,
@@ -56,6 +61,7 @@ enum LevelType {
     required this.fieldAsset,
     required this.enemyTexture,
     required this.ammunitionAsset,
+    required this.giftAsset,
     required this.treeAsset,
     required this.city,
     required this.levelDifficulty,
@@ -66,6 +72,7 @@ enum LevelType {
   final String fieldAsset;
   final String enemyTexture;
   final String ammunitionAsset;
+  final String giftAsset;
   final String treeAsset;
   final int city;
   final int levelDifficulty;

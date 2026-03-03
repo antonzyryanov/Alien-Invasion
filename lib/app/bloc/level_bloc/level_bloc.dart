@@ -6,6 +6,8 @@ import 'package:alien_invasion/app/bloc/level_bloc/models/dynamic_enemy.dart';
 import 'package:alien_invasion/app/bloc/level_bloc/models/dynamic_cloud.dart';
 import 'package:alien_invasion/app/bloc/level_bloc/models/dynamic_tree.dart';
 import 'package:alien_invasion/app/bloc/level_bloc/models/dynamic_house.dart';
+import 'package:alien_invasion/app/bloc/level_bloc/models/dynamic_gift.dart';
+import 'package:alien_invasion/app/bloc/level_bloc/models/floating_bonus_feedback.dart';
 import 'package:alien_invasion/app/bloc/level_bloc/models/level_enemy_frame.dart';
 import 'package:alien_invasion/app/bloc/level_bloc/models/level_enemy_progress.dart';
 import 'package:alien_invasion/app/bloc/level_bloc/models/level_ship_frame.dart';
@@ -29,6 +31,7 @@ part 'level_logic/level_enemy_logic.dart';
 part 'level_logic/level_clouds_logic.dart';
 part 'level_logic/level_trees_logic.dart';
 part 'level_logic/level_houses_logic.dart';
+part 'level_logic/level_gifts_logic.dart';
 part 'level_logic/level_tick_coordinator.dart';
 
 class LevelBloc extends Bloc<LevelEvent, LevelState> {
@@ -154,6 +157,16 @@ class LevelBloc extends Bloc<LevelEvent, LevelState> {
         errorMessage: null,
         spawnedEnemyBatches: 0,
         dynamicEnemies: initialEnemies,
+        dynamicClouds: const [],
+        dynamicTrees: const [],
+        dynamicHouses: const [],
+        dynamicGifts: const [],
+        dynamicAmmunition: const [],
+        cloudTimers: const {},
+        treeTimers: const {},
+        houseTimers: const {},
+        giftTimers: const {},
+        giftBonusFeedbacks: const [],
       ),
     );
   }

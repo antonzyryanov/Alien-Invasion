@@ -41,11 +41,9 @@ class LevelCloudsLogic {
       const renderCloudWidth = 120.0;
       Offset spawnCoord;
       do {
-        final screenWidth = MediaQueryData.fromWindow(
-          WidgetsBinding.instance.window,
-        ).size.width;
-        final x = mathRandom.nextDouble() * (screenWidth - renderCloudWidth);
-        final y = -100.0;
+        final x =
+            mathRandom.nextDouble() * (state.viewport.width - renderCloudWidth);
+        final y = -(300 + mathRandom.nextDouble() * 900);
         spawnCoord = Offset(x, y);
       } while (usedCoords.contains(spawnCoord));
       usedCoords.add(spawnCoord);

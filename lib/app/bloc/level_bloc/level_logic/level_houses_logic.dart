@@ -41,26 +41,53 @@ class LevelHousesLogic {
       final houseAsset =
           'assets/images/cities/city_${city}/house_${houseIdx}.png';
       const renderHouseWidth = 120.0;
-      final screenWidth = MediaQueryData.fromWindow(
-        WidgetsBinding.instance.window,
-      ).size.width;
-      final slotCount = (screenWidth / renderHouseWidth).floor();
-      final List<int> occupiedSlots = [];
-      for (final house in houses) {
-        final slot = (house.center.dx / renderHouseWidth).floor();
-        occupiedSlots.add(slot);
-      }
-      for (final tree in state.dynamicTrees) {
-        final slot = (tree.center.dx / renderHouseWidth).floor();
-        occupiedSlots.add(slot);
-      }
-      final availableSlots = List<int>.generate(slotCount, (i) => i)
-        ..removeWhere((i) => occupiedSlots.contains(i));
-      if (availableSlots.isEmpty) return;
-      final slot = availableSlots[mathRandom.nextInt(availableSlots.length)];
-      final x = slot * renderHouseWidth;
-      final y = -100.0;
-      final spawnCoord = Offset(x, y);
+      const renderHouseHeight = 96.0;
+      Offset spawnCoord;
+      int attempts = 0;
+      bool overlaps = false;
+      do {
+        final x =
+            mathRandom.nextDouble() * (state.viewport.width - renderHouseWidth);
+        final y = -(300 + mathRandom.nextDouble() * 900);
+        spawnCoord = Offset(x, y);
+        overlaps = false;
+
+        for (final house in houses) {
+          final rectA = Rect.fromLTWH(
+            x,
+            y,
+            renderHouseWidth,
+            renderHouseHeight,
+          );
+          final rectB = Rect.fromLTWH(
+            house.center.dx,
+            house.center.dy,
+            renderHouseWidth,
+            renderHouseHeight,
+          );
+          if (rectA.overlaps(rectB)) {
+            overlaps = true;
+            break;
+          }
+        }
+
+        for (final tree in state.dynamicTrees) {
+          final rectA = Rect.fromLTWH(
+            x,
+            y,
+            renderHouseWidth,
+            renderHouseHeight,
+          );
+          final rectB = Rect.fromLTWH(tree.center.dx, tree.center.dy, 120, 144);
+          if (rectA.overlaps(rectB)) {
+            overlaps = true;
+            break;
+          }
+        }
+
+        attempts++;
+      } while ((usedCoords.contains(spawnCoord) || overlaps) && attempts < 30);
+
       usedCoords.add(spawnCoord);
       final speed = 120.0;
       houses.add(

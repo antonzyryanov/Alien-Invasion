@@ -42,7 +42,17 @@ class _LevelTickCoordinator {
     final usedCloudCoords = <Offset>{};
     final usedTreeCoords = <Offset>{};
     final usedHouseCoords = <Offset>{};
+    final usedGiftCoords = <Offset>{};
     final mathRandom = math.Random();
+    var giftBonusFeedbacks = state.giftBonusFeedbacks
+        .map(
+          (feedback) => feedback.copyWith(
+            center: feedback.center.translate(0, -130 * dt),
+            remainingSeconds: feedback.remainingSeconds - dt,
+          ),
+        )
+        .where((feedback) => feedback.isAlive)
+        .toList();
 
     var dynamicClouds = List<DynamicCloud>.from(state.dynamicClouds);
     dynamicClouds = LevelCloudsLogic.removeOffscreenClouds(
@@ -84,6 +94,18 @@ class _LevelTickCoordinator {
       mathRandom,
       usedHouseCoords,
       state.houseTimers,
+    );
+
+    var dynamicGifts = List<DynamicGift>.from(state.dynamicGifts);
+    dynamicGifts = LevelGiftsLogic.removeOffscreenGifts(dynamicGifts, viewport);
+    dynamicGifts = LevelGiftsLogic.moveGifts(dynamicGifts, dt);
+    LevelGiftsLogic.maybeSpawnGift(
+      dynamicGifts,
+      state,
+      dt,
+      mathRandom,
+      usedGiftCoords,
+      state.giftTimers,
     );
 
     var dynamicEnemies = List<DynamicEnemy>.from(state.dynamicEnemies);
@@ -193,8 +215,10 @@ class _LevelTickCoordinator {
           dynamicClouds: dynamicClouds,
           dynamicTrees: dynamicTrees,
           dynamicHouses: dynamicHouses,
+          dynamicGifts: dynamicGifts,
           dynamicEnemies: dynamicEnemies,
           dynamicAmmunition: dynamicAmmunition,
+          giftBonusFeedbacks: giftBonusFeedbacks,
           points: points,
           lives: 0,
           spawnedEnemyBatches: spawnedEnemyBatches,
@@ -243,14 +267,49 @@ class _LevelTickCoordinator {
       }
     }
 
+    final shipSize = AppDimensions.shipSizeForSize(viewport);
+    final shipRect = Rect.fromCenter(
+      center: shipFrame.shipCenter,
+      width: shipSize,
+      height: shipSize,
+    );
+    int giftBonusPoints = 0;
+    final remainingGifts = <DynamicGift>[];
+    for (final gift in dynamicGifts) {
+      final giftRect = Rect.fromCenter(
+        center: gift.center,
+        width: 64,
+        height: 64,
+      );
+      if (giftRect.overlaps(shipRect)) {
+        final bonusPoints = 5 + mathRandom.nextInt(6);
+        giftBonusPoints += bonusPoints;
+        giftBonusFeedbacks = [
+          ...giftBonusFeedbacks,
+          FloatingBonusFeedback(
+            center: shipFrame.shipCenter.translate(0, -(shipSize * 0.9)),
+            points: bonusPoints,
+            totalSeconds: 0.65,
+            remainingSeconds: 0.65,
+          ),
+        ];
+      } else {
+        remainingGifts.add(gift);
+      }
+    }
+    dynamicGifts = remainingGifts;
+    points += giftBonusPoints;
+
     if (gameOver) {
       return LevelTickOutcome(
         nextState: state.copyWith(
           dynamicClouds: dynamicClouds,
           dynamicTrees: dynamicTrees,
           dynamicHouses: dynamicHouses,
+          dynamicGifts: dynamicGifts,
           dynamicEnemies: newDynamicEnemies,
           dynamicAmmunition: dynamicAmmunition,
+          giftBonusFeedbacks: giftBonusFeedbacks,
           lives: 0,
           spawnedEnemyBatches: spawnedEnemyBatches,
           shipCenter: shipFrame.shipCenter,
@@ -297,8 +356,10 @@ class _LevelTickCoordinator {
         dynamicClouds: dynamicClouds,
         dynamicTrees: dynamicTrees,
         dynamicHouses: dynamicHouses,
+        dynamicGifts: dynamicGifts,
         dynamicEnemies: newDynamicEnemies,
         dynamicAmmunition: dynamicAmmunition,
+        giftBonusFeedbacks: giftBonusFeedbacks,
         points: points,
         lives: newLives,
         spawnedEnemyBatches: spawnedEnemyBatches,
