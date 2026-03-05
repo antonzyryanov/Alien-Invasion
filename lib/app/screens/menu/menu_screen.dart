@@ -6,6 +6,7 @@ import '../../../app_design/app_layout.dart';
 import '../../../localizations/app_localizations.dart';
 import '../../models/level_type.dart';
 import 'models/menu_action_item.dart';
+import 'widgets/menu_ad_banner.dart';
 import 'widgets/menu_actions_list.dart';
 import 'widgets/menu_header_icon.dart';
 
@@ -82,6 +83,7 @@ class MenuScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              const MenuAdBanner(),
             ],
           ),
         ),

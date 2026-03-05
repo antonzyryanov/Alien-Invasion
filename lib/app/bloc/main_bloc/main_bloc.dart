@@ -10,6 +10,7 @@ import 'package:alien_invasion/app/models/app_route.dart';
 import 'package:alien_invasion/app/models/level_type.dart';
 import 'package:alien_invasion/app/models/score_entry.dart';
 import 'package:alien_invasion/app/repositories/score_repository.dart';
+import 'package:alien_invasion/app/services/ad_service/appodeal_ad_service.dart';
 import 'package:alien_invasion/app/services/audio_service/audio_service.dart';
 import 'package:alien_invasion/app/services/app_logger.dart';
 
@@ -23,15 +24,18 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   }) : this._(
          scoreRepository: scoreRepository,
          audioService: AudioService(),
+         adService: AppodealAdService(),
          enableLevelTicker: enableLevelTicker,
        );
 
   MainBloc._({
     required ScoreRepository scoreRepository,
     required AudioService audioService,
+    required AppodealAdService adService,
     required bool enableLevelTicker,
   }) : _scoreRepository = scoreRepository,
        _audioService = audioService,
+       _adService = adService,
        levelBloc = LevelBloc(
          audioService: audioService,
          enableTicker: enableLevelTicker,
@@ -61,6 +65,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
   final ScoreRepository _scoreRepository;
   final AudioService _audioService;
+  final AppodealAdService _adService;
   final LevelBloc levelBloc;
   StreamSubscription<LevelState>? _levelSubscription;
   LevelStatus _lastObservedLevelStatus = LevelStatus.idle;
@@ -72,6 +77,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     final soundEnabled = preferences.getBool(_soundEnabledKey) ?? true;
     final isOnboardingShown = preferences.getBool(_onboardingShownKey) ?? false;
     await _audioService.setSoundEnabled(soundEnabled);
+    await _adService.initialize();
     emit(
       state.copyWith(
         soundEnabled: soundEnabled,
@@ -153,7 +159,20 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     emit(state.copyWith(route: AppRoute.credits));
   }
 
-  void _onStartLevel(MainStartLevelRequested event, Emitter<MainState> emit) {
+  Future<void> _onStartLevel(
+    MainStartLevelRequested event,
+    Emitter<MainState> emit,
+  ) async {
+    try {
+      await _adService.showRewardedVideoAndWait();
+    } catch (error, stackTrace) {
+      appLogger.warning(
+        'Rewarded video failed, starting level anyway',
+        error,
+        stackTrace,
+      );
+    }
+
     unawaited(_audioService.stopThemeMusic());
     if (state.soundEnabled) {
       unawaited(
