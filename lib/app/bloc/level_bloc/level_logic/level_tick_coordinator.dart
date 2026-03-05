@@ -35,6 +35,7 @@ class _LevelTickCoordinator {
           playShowingScores: true,
           playEncounteredEnemy: false,
           playAmmunitionEncounteredEnemy: false,
+          playEncounteredGift: false,
         );
       }
     }
@@ -231,6 +232,7 @@ class _LevelTickCoordinator {
         playShowingScores: false,
         playEncounteredEnemy: false,
         playAmmunitionEncounteredEnemy: false,
+        playEncounteredGift: false,
       );
     }
 
@@ -321,6 +323,7 @@ class _LevelTickCoordinator {
         playShowingScores: false,
         playEncounteredEnemy: true,
         playAmmunitionEncounteredEnemy: false,
+        playEncounteredGift: false,
       );
     }
 
@@ -372,6 +375,7 @@ class _LevelTickCoordinator {
       playShowingScores: false,
       playEncounteredEnemy: shipFrame.hitEnemy,
       playAmmunitionEncounteredEnemy: ammunitionHitEnemy,
+      playEncounteredGift: giftBonusPoints > 0,
     );
   }
 }

@@ -13,6 +13,10 @@ class AudioService {
     await _sfxPlayer.playAmmunitionEncounteredEnemy();
   }
 
+  Future<void> playEncounteredGift() async {
+    await _sfxPlayer.playEncounteredGift();
+  }
+
   AudioService({
     ThemeMusicPlayer? themeMusicPlayer,
     LevelMusicPlayer? levelMusicPlayer,

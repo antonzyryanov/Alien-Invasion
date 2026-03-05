@@ -212,6 +212,9 @@ class LevelBloc extends Bloc<LevelEvent, LevelState> {
       if (outcome.playAmmunitionEncounteredEnemy) {
         unawaited(_audioService.playAmmunitionEncounteredEnemy());
       }
+      if (outcome.playEncounteredGift) {
+        unawaited(_audioService.playEncounteredGift());
+      }
 
       if (outcome.nextState != null) {
         emit(outcome.nextState!);

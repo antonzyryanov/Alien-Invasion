@@ -6,6 +6,7 @@ class LevelTickOutcome {
     required this.playShowingScores,
     required this.playEncounteredEnemy,
     required this.playAmmunitionEncounteredEnemy,
+    required this.playEncounteredGift,
   });
 
   factory LevelTickOutcome.noChange() => const LevelTickOutcome(
@@ -13,10 +14,12 @@ class LevelTickOutcome {
     playShowingScores: false,
     playEncounteredEnemy: false,
     playAmmunitionEncounteredEnemy: false,
+    playEncounteredGift: false,
   );
 
   final LevelState? nextState;
   final bool playShowingScores;
   final bool playEncounteredEnemy;
   final bool playAmmunitionEncounteredEnemy;
+  final bool playEncounteredGift;
 }

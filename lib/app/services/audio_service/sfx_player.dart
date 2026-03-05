@@ -8,12 +8,17 @@ import '../app_logger.dart';
 class SfxPlayer {
   AudioPool? _ammunitionSoundPool;
   AudioPool? _ammunitionEncounteredEnemyPool;
+  AudioPool? _encounteredGiftPool;
   Future<void> playAmmunitionSound() async {
     await _play(_ammunitionSoundPool);
   }
 
   Future<void> playAmmunitionEncounteredEnemy() async {
     await _play(_ammunitionEncounteredEnemyPool);
+  }
+
+  Future<void> playEncounteredGift() async {
+    await _play(_encounteredGiftPool);
   }
 
   SfxPlayer() {
@@ -84,6 +89,21 @@ class SfxPlayer {
       );
     }
 
+    try {
+      _encounteredGiftPool = await AudioPool.create(
+        source: AssetSource('audio/encountered_gift.mp3'),
+        maxPlayers: 4,
+        minPlayers: 1,
+        audioContext: sfxContext,
+      );
+    } catch (error, stackTrace) {
+      appLogger.severe(
+        'Failed to load encountered gift sfx',
+        error,
+        stackTrace,
+      );
+    }
+
     _encounteredEnemyPool = await AudioPool.create(
       source: AssetSource('audio/encountered_enemy.mp3'),
       maxPlayers: 2,
@@ -104,5 +124,6 @@ class SfxPlayer {
     await _showingScoresPool?.dispose();
     await _ammunitionSoundPool?.dispose();
     await _ammunitionEncounteredEnemyPool?.dispose();
+    await _encounteredGiftPool?.dispose();
   }
 }
