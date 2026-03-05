@@ -40,6 +40,10 @@ final class MainOpenScoresRequested extends MainEvent {
   const MainOpenScoresRequested();
 }
 
+final class MainOpenCreditsRequested extends MainEvent {
+  const MainOpenCreditsRequested();
+}
+
 final class MainStartLevelRequested extends MainEvent {
   const MainStartLevelRequested(this.levelType);
 

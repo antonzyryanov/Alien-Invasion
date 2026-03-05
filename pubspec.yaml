@@ -81,6 +81,7 @@ flutter:
     - assets/images/game_over/
     - assets/images/app_icon/
     - assets/audio/
+    - assets/audio/level/
 
 flutter_launcher_icons:
   android: true

@@ -48,13 +48,13 @@ class AudioService {
     await _themeMusicPlayer.stop();
   }
 
-  Future<void> playLevelMusicLoop() async {
+  Future<void> playLevelMusicLoop({required int levelDifficulty}) async {
     if (!_soundEnabled) {
       return;
     }
 
     await _themeMusicPlayer.stop();
-    await _levelMusicPlayer.playLoop();
+    await _levelMusicPlayer.playLoop(levelDifficulty: levelDifficulty);
   }
 
   Future<void> stopLevelMusic() async {

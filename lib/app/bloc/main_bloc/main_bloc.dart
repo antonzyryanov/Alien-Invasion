@@ -44,6 +44,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     on<MainOpenMenuRequested>(_onOpenMenu);
     on<MainOpenSettingsRequested>(_onOpenSettings);
     on<MainOpenScoresRequested>(_onOpenScores);
+    on<MainOpenCreditsRequested>(_onOpenCredits);
     on<MainStartLevelRequested>(_onStartLevel);
     on<MainLanguageChanged>(_onLanguageChanged);
     on<MainSoundChanged>(_onSoundChanged);
@@ -148,10 +149,18 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     emit(state.copyWith(route: AppRoute.scores));
   }
 
+  void _onOpenCredits(MainOpenCreditsRequested event, Emitter<MainState> emit) {
+    emit(state.copyWith(route: AppRoute.credits));
+  }
+
   void _onStartLevel(MainStartLevelRequested event, Emitter<MainState> emit) {
     unawaited(_audioService.stopThemeMusic());
     if (state.soundEnabled) {
-      unawaited(_audioService.playLevelMusicLoop());
+      unawaited(
+        _audioService.playLevelMusicLoop(
+          levelDifficulty: event.levelType.levelDifficulty,
+        ),
+      );
     }
     levelBloc.add(
       LevelStartRequested(
@@ -178,7 +187,11 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       if (state.route == AppRoute.menu) {
         unawaited(_audioService.playThemeMusicLoop());
       } else if (state.route == AppRoute.game) {
-        unawaited(_audioService.playLevelMusicLoop());
+        unawaited(
+          _audioService.playLevelMusicLoop(
+            levelDifficulty: levelBloc.state.levelType?.levelDifficulty ?? 1,
+          ),
+        );
       }
     }
   }

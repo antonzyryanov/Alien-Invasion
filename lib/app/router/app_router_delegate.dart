@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:alien_invasion/app/bloc/main_bloc/main_bloc.dart';
 
 import '../models/app_route.dart';
+import '../screens/credits_screen/credits_screen.dart';
 import '../screens/game_screen/game_screen.dart';
 import '../screens/menu/menu_screen.dart';
 import '../screens/name_screen/name_screen.dart';
@@ -47,6 +48,9 @@ class AppRouterDelegate extends RouterDelegate<AppRoute>
       case AppRoute.scores:
         _mainBloc.add(const MainOpenScoresRequested());
         break;
+      case AppRoute.credits:
+        _mainBloc.add(const MainOpenCreditsRequested());
+        break;
       case AppRoute.settings:
         _mainBloc.add(const MainOpenSettingsRequested());
         break;
@@ -79,6 +83,7 @@ class AppRouterDelegate extends RouterDelegate<AppRoute>
                 postOnboardingRoute: AppRoute.menu,
               ),
             ),
+            onCredits: () => _mainBloc.add(const MainOpenCreditsRequested()),
             onSettings: () => _mainBloc.add(const MainOpenSettingsRequested()),
           ),
           AppRoute.game => GameScreen(
@@ -87,6 +92,9 @@ class AppRouterDelegate extends RouterDelegate<AppRoute>
           ),
           AppRoute.scores => ScoresScreen(
             scores: state.scores,
+            onBack: () => _mainBloc.add(const MainOpenMenuRequested()),
+          ),
+          AppRoute.credits => CreditsScreen(
             onBack: () => _mainBloc.add(const MainOpenMenuRequested()),
           ),
           AppRoute.settings => SettingsScreen(

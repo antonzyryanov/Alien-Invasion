@@ -1,1 +1,1 @@
-enum AppRoute { enterName, onboarding, menu, game, scores, settings }
+enum AppRoute { enterName, onboarding, menu, game, scores, credits, settings }

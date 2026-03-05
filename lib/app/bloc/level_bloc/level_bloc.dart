@@ -35,12 +35,21 @@ part 'level_logic/level_gifts_logic.dart';
 part 'level_logic/level_tick_coordinator.dart';
 
 class LevelBloc extends Bloc<LevelEvent, LevelState> {
-  DateTime? _lastAmmoSoundTime;
+  static const Duration _ammunitionCooldown = Duration(seconds: 1);
+  DateTime? _lastAmmunitionFiredAt;
   void _onAmmunitionFired(
     LevelAmmunitionFired event,
     Emitter<LevelState> emit,
   ) {
     if (!state.isPlayable) return;
+    final now = DateTime.now();
+    if (_lastAmmunitionFiredAt != null &&
+        now.difference(_lastAmmunitionFiredAt!) < _ammunitionCooldown) {
+      return;
+    }
+
+    _lastAmmunitionFiredAt = now;
+
     final shipCenter = state.shipCenter;
     final viewport = state.viewport;
     final ammoSpeed = 600.0;
@@ -55,12 +64,7 @@ class LevelBloc extends Bloc<LevelEvent, LevelState> {
     emit(
       state.copyWith(dynamicAmmunition: [...state.dynamicAmmunition, newAmmo]),
     );
-    final now = DateTime.now();
-    if (_lastAmmoSoundTime == null ||
-        now.difference(_lastAmmoSoundTime!) > Duration(milliseconds: 100)) {
-      unawaited(_audioService.playAmmunitionSound());
-      _lastAmmoSoundTime = now;
-    }
+    unawaited(_audioService.playAmmunitionSound());
   }
 
   LevelBloc({required AudioService audioService, bool enableTicker = true})

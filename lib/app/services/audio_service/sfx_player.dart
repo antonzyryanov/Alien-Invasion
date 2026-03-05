@@ -13,7 +13,6 @@ class SfxPlayer {
   }
 
   Future<void> playAmmunitionEncounteredEnemy() async {
-    print('[SFX DEBUG] playAmmunitionEncounteredEnemy called');
     await _play(_ammunitionEncounteredEnemyPool);
   }
 
@@ -63,29 +62,26 @@ class SfxPlayer {
     final sfxContext = AudioContextConfig(
       focus: AudioContextConfigFocus.mixWithOthers,
     ).build();
+    _ammunitionSoundPool = await AudioPool.create(
+      source: AssetSource('audio/ammunition_sound.mp3'),
+      maxPlayers: 1,
+      minPlayers: 1,
+      audioContext: sfxContext,
+    );
+
     try {
-      print('[SFX DEBUG] Loading ammunition_sound.mp3');
-      _ammunitionSoundPool = await AudioPool.create(
-        source: AssetSource('audio/ammunition_sound.mp3'),
-        maxPlayers: 2,
-        minPlayers: 1,
-        audioContext: sfxContext,
-      );
-      print('[SFX DEBUG] Loaded ammunition_sound.mp3');
-    } catch (e) {
-      print('[SFX ERROR] Failed to load ammunition_sound.mp3: $e');
-    }
-    try {
-      print('[SFX DEBUG] Loading ammunition_encountered_enemy.mp3');
       _ammunitionEncounteredEnemyPool = await AudioPool.create(
         source: AssetSource('audio/ammunition_encountered_enemy.mp3'),
         maxPlayers: 4,
         minPlayers: 1,
         audioContext: sfxContext,
       );
-      print('[SFX DEBUG] Loaded ammunition_encounted_enemy.mp3');
-    } catch (e) {
-      print('[SFX ERROR] Failed to load ammunition_encounted_enemy.mp3: $e');
+    } catch (error, stackTrace) {
+      appLogger.severe(
+        'Failed to load ammunition encountered enemy sfx',
+        error,
+        stackTrace,
+      );
     }
 
     _encounteredEnemyPool = await AudioPool.create(

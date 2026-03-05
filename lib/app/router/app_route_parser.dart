@@ -13,6 +13,7 @@ class AppRouteParser extends RouteInformationParser<AppRoute> {
       '/menu' => AppRoute.menu,
       '/game' => AppRoute.game,
       '/scores' => AppRoute.scores,
+      '/credits' => AppRoute.credits,
       '/settings' => AppRoute.settings,
       _ => AppRoute.enterName,
     };
@@ -26,6 +27,7 @@ class AppRouteParser extends RouteInformationParser<AppRoute> {
       AppRoute.menu => '/menu',
       AppRoute.game => '/game',
       AppRoute.scores => '/scores',
+      AppRoute.credits => '/credits',
       AppRoute.settings => '/settings',
     };
     return RouteInformation(uri: Uri.parse(location));

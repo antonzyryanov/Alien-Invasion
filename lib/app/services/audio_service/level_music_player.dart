@@ -28,6 +28,7 @@ class LevelMusicPlayer {
   bool _soundEnabled = true;
   bool _shouldKeepLoop = false;
   bool _isRestartingLoop = false;
+  int _currentLevelDifficulty = 1;
 
   Future<void> setSoundEnabled(bool enabled) async {
     _soundEnabled = enabled;
@@ -36,10 +37,16 @@ class LevelMusicPlayer {
     }
   }
 
-  Future<void> playLoop() async {
+  Future<void> playLoop({required int levelDifficulty}) async {
+    _currentLevelDifficulty = levelDifficulty;
     _shouldKeepLoop = true;
-    if (!_soundEnabled || _isPlaying) {
+    if (!_soundEnabled) {
       return;
+    }
+
+    if (_isPlaying) {
+      await _player.stop();
+      _isPlaying = false;
     }
 
     try {
@@ -47,7 +54,7 @@ class LevelMusicPlayer {
       await _player.setVolume(AppAudio.musicVolume);
       await AudioAssetPlayer.playAssetWithFallback(
         player: _player,
-        assetPath: 'audio/level_music.mp3',
+        assetPath: _assetPathForDifficulty(_currentLevelDifficulty),
       );
       _isPlaying = true;
     } catch (error, stackTrace) {
@@ -88,7 +95,7 @@ class LevelMusicPlayer {
       await _player.setVolume(AppAudio.musicVolume);
       await AudioAssetPlayer.playAssetWithFallback(
         player: _player,
-        assetPath: 'audio/level_music.mp3',
+        assetPath: _assetPathForDifficulty(_currentLevelDifficulty),
       );
     } catch (error, stackTrace) {
       appLogger.severe('Failed to restore level music', error, stackTrace);
@@ -111,7 +118,7 @@ class LevelMusicPlayer {
       await _player.setVolume(AppAudio.musicVolume);
       await AudioAssetPlayer.playAssetWithFallback(
         player: _player,
-        assetPath: 'audio/level_music.mp3',
+        assetPath: _assetPathForDifficulty(_currentLevelDifficulty),
       );
       _isPlaying = true;
     } catch (error, stackTrace) {
@@ -124,5 +131,9 @@ class LevelMusicPlayer {
   Future<void> dispose() async {
     await _stateSubscription?.cancel();
     await _player.dispose();
+  }
+
+  String _assetPathForDifficulty(int levelDifficulty) {
+    return 'audio/level/level_music_$levelDifficulty.mp3';
   }
 }

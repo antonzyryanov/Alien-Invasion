@@ -14,6 +14,7 @@ class MenuScreen extends StatelessWidget {
     required this.onLevelSelected,
     required this.onScores,
     required this.onInstructions,
+    required this.onCredits,
     required this.onSettings,
     super.key,
   });
@@ -21,6 +22,7 @@ class MenuScreen extends StatelessWidget {
   final ValueChanged<LevelType> onLevelSelected;
   final VoidCallback onScores;
   final VoidCallback onInstructions;
+  final VoidCallback onCredits;
   final VoidCallback onSettings;
 
   @override
@@ -55,6 +57,7 @@ class MenuScreen extends StatelessWidget {
         label: localizations.t('instructions'),
         onTap: onInstructions,
       ),
+      MenuActionItem(label: localizations.t('credits'), onTap: onCredits),
       MenuActionItem(label: localizations.t('settings'), onTap: onSettings),
     ];
 
